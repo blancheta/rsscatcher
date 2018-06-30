@@ -1,0 +1,56 @@
+{% extends "dashboard/dashboard.html" %}
+{% load bootstrap4 %}
+{% load static %}
+{% load custom_tags %}
+
+{% block title %}Discover{% endblock %}
+
+{% block header %}
+{%  endblock %}
+
+{% block dashboard-content %}
+
+<h2 class="mb-3">What website or topic do you want to follow?</h2>
+
+    <form method="post" class="form" action="">
+        {% csrf_token %}
+        <div class="input-group mb-3">
+            <input type="text" class="form-control" name="search-input" placeholder="Try a name, topic or paste a url">
+            <div class="input-group-append">
+                <button id="search-button" class="btn btn-outline-secondary" type="submit">Search</button>
+            </div>
+        </div>
+    </form>
+
+    <div class="feeds">
+        {% for source in sources %}
+            <div class="row feed" id="feed-{{ source.slug }}">
+                <div class="col-md-5 col-sm-12 feed-name"><h5>{{ source.name }}</h5></div>
+                <div class="col-md-5 col-sm-12 keywords">
+                    {% for keyword in source.keywords.all %}
+                       #{{ keyword.name }}
+                    {% endfor %}
+
+                </div>
+                <div class="col-md-2 col-sm-12 action-col">
+                    <form method="post" class="form" action="">
+                        {% csrf_token %}
+                        {% is_followed source.id user.id as following %}
+                        <input type="hidden" name="feed-to-follow" value="{{ source.id }}" />
+                        {% if following %}
+                            <input type="hidden" name="following" value="yes" />
+                            <button type="submit" class="btn btn-success btn-block follow-me">Following</button>
+                        {% else %}
+                            <input type="hidden" name="following" value="no" />
+                            <button type="submit" class="btn btn-info btn-block follow-me">Follow Me</button>
+                        {% endif %}
+                    </form>
+                </div>
+                <hr />
+            </div>
+        {% empty %}
+            <span>No sources available</span>
+        {% endfor %}
+    </div>
+
+{%  endblock %}

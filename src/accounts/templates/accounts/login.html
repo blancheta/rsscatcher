@@ -1,0 +1,26 @@
+{% extends "base/base.html" %}
+{% load bootstrap4 %}
+
+{% block title %}
+    Log in
+{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <div class="row justify-content-md-center">
+            <div class="col-md-4">
+                <h1 class="text-center">Log in</h1>
+                <form method="post" action="" id="login_form" class="form" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    {% bootstrap_form form %}
+                    <input type="hidden" name="next" value="{{next}}">
+                    {% buttons %}
+                        <button id="login" type="submit" class="btn btn-primary btn-block">
+                            Log in
+                        </button>
+                    {% endbuttons %}
+                </form>
+            </div>
+        </div>
+    </div>
+{%  endblock %}

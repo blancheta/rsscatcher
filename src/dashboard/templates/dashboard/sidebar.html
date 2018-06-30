@@ -1,0 +1,70 @@
+<div class="col-md-2 col-sm-12 sidebar">
+
+    <div id="app-title">
+        <h4>RSSCatcher</h4>
+    </div>
+    <div id="feed-navbar">
+
+        {% include "dashboard/sidebar-filters.html" %}
+
+        <b class="sidebar-panel-title">MY FEEDS</b>
+        <div id="my-feeds"></div>
+
+    </div>
+</div>
+
+<script type="text/javascript">
+
+    $(document).ready(function() {
+        $.get("/dashboard/sidebar/", function(data) {
+
+            $("#today-posts-count").text(data['today-posts-count']);
+            $("#readlater-posts-count").text(data['readlater-posts-count']);
+            $("#read-posts-count").text(data['read-posts-count']);
+            $("#unread-posts-count").text(data['unread-posts-count']);
+            $("#favorite-posts-count").text(data['favorite-posts-count']);
+
+            /* Generate a list of feeds on the left side */
+            if(data['feeds'].length == 0){
+                $("#my-feeds").append("No subscribed feeds")
+            }
+
+            $.each( data['feeds'], function( key, value ) {
+
+                /* Create the first col */
+
+                var col1 = $('<div/>', {
+                    class: 'col col-2',
+                });
+                col1.append("|||");
+
+                /* Create the link col */
+
+                var col_link = $('<div/>', {
+                    class: 'col col-8',
+                });
+
+                var slug ="/dashboard/feed/" + value['slug'];
+
+                var a = $('<a/>').append(value['name']);
+                a.attr("href", slug);
+                a.appendTo(col_link);
+
+                /* Create the count col */
+
+                var col_count = $('<div/>', {
+                    class: 'col col-2 filter-count',
+                });
+                col_count.append(value['posts_count']);
+
+                var row = $('<div/>', {
+                    class: 'row',
+                });
+
+                row.append(col1, col_link, col_count).appendTo('#my-feeds');
+            });
+        });
+
+    });
+
+</script>

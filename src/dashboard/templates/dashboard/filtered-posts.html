@@ -1,0 +1,18 @@
+{% extends "dashboard/dashboard.html" %}
+{% load bootstrap4 %}
+{% load static %}
+
+{% block title %}Posts filter{% endblock %}
+
+{% block header %}
+{%  endblock %}
+
+{% block dashboard-content %}
+
+    <h2>Filter by {{ filter }}</h2>
+
+    <h5>The insights you need to get the inside edge</h5>
+
+    {% include "dashboard/post-list.html" %}
+
+{%  endblock %}

@@ -1,0 +1,27 @@
+{% load bootstrap4 %}
+{% load staticfiles %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}Welcome{% endblock%}</title>
+    {% bootstrap_css %}
+    {% bootstrap_javascript jquery='full' %}
+    <link href="{% static "base/css/style.css" %}" type="text/css" rel="stylesheet">
+</head>
+<body>
+    {% block header %}
+        {% include "base/base_header.html" %}
+    {% endblock %}
+
+    {% block content %}
+    {% endblock %}
+
+    {% block footer %}
+        {% include "base/base_footer.html" %}
+    {% endblock %}
+
+</body>
+</html>

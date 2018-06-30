@@ -1,0 +1,27 @@
+{% extends "base/base.html" %}
+{% load bootstrap4 %}
+
+{% block title %}
+    Sign up
+{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <div class="row justify-content-md-center">
+            <div class="col-md-6">
+                <h1 class="text-center">Sign up</h1>
+
+                <form id="signup_form" method="post" action="" enctype="multipart/form-data" class="form">
+                    {% csrf_token %}
+                    {% bootstrap_form form%}
+                    {% buttons %}
+                        <button type="submit" id="create-account" class="btn btn-success btn-block">
+                            Create account
+                        </button>
+                    {% endbuttons %}
+
+                </form>
+            </div>
+        </div>
+    </div>
+{%  endblock %}

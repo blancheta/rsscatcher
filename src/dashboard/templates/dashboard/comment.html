@@ -1,0 +1,45 @@
+{% extends "dashboard/dashboard.html" %}
+{% load bootstrap4 %}
+{% load static %}
+{% load custom_tags %}
+{% block title %}Comment{% endblock %}
+
+{% block header %}
+{%  endblock %}
+
+{% block dashboard-content %}
+
+
+    <h2>
+        {% if action == 'edit' %}
+            Edit my comment
+        {% elif action == "reply" %}
+            Reply to the comment
+        {% endif %}
+    </h2>
+
+    <div>
+        <form method="post" class="form" action="">
+            {% csrf_token %}
+            <div class="input-group mb-3">
+                {% if action == "edit" %}
+                    <textarea class="form-control" name="comment-input" >{{ comment.content }}</textarea>
+                {% else %}
+                    <textarea class="form-control" name="comment-input" ></textarea>
+                {% endif %}
+                <input type="hidden" class="form-control" name="post-id" value="{{ comment.post.id }}">
+                <button id="comment-action-button" class="btn btn-outline-secondary" type="submit">Reply</button>
+            </div>
+        </form>
+        {% comments comment.id|slugify 0 True user.id %}
+    </div>
+
+    <script type="text/javascript">
+        $(document).ready(function() {
+            var post_state ="{{ state }}";
+            $('#marked-as-' + post_state).addClass('btn-primary');
+            $('#marked-as-' + post_state).removeClass('btn-outline-primary');
+        });
+    </script>
+
+{%  endblock %}

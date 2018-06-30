@@ -1,0 +1,18 @@
+{% extends "base/base.html" %}
+{% load bootstrap4 %}
+
+{% block content %}
+    <div class="landing-page-background">
+        <div class="jumbotron">
+            <div class="container">
+                <div class="row justify-content-md-center">
+                    <div class="col-md-auto">
+                        <h1 class="display-4 ">Follow RSS Feeds during your holidays</h1>
+                        <p class="lead">More than 10k users have already joined us</p>
+                        <a class="btn btn-success btn-lg" href="{%  url 'accounts_signup' %}" id="sign-up" role="button" href="#">Sign up now</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{%  endblock %}

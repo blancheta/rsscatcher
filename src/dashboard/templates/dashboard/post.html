@@ -1,0 +1,52 @@
+{% extends "dashboard/dashboard.html" %}
+{% load bootstrap4 %}
+{% load static %}
+{% load custom_tags %}
+{% block title %}Post{% endblock %}
+
+{% block header %}
+{%  endblock %}
+
+{% block dashboard-content %}
+    <div id="post-content">
+        <div class="row" id="post-action-bar">
+            <a href="{% url 'dashboard-post-change-state' post.feed.slug post.slug 'read' %}" class="btn btn btn-outline-primary" id="marked-as-read" role="button" >Marked as Read</a>
+            <a href="{% url 'dashboard-post-change-state' post.feed.slug post.slug 'favorite' %}" class="btn btn btn-outline-primary" id="marked-as-favorite" role="button" >Marked as Favorite</a>
+            <a href="{% url 'dashboard-post-change-state' post.feed.slug post.slug 'readlater' %}" class="btn btn btn-outline-primary" id="marked-as-readlater" role="button" >Marked as Read Later</a>
+        </div>
+        <div class="row align-items-center h-100">
+            <div class="col-md-8 col-sm-12">
+                <h2>{{ post.name }}</h2>
+            </div>
+            <div class="col-mf-4 col-sm-12">
+                <a target="_blank" href="{{ post.url }}">Go to the website</a>
+            </div>
+        </div>
+        <div class="row post-content">
+            {{ post.content|striptags}}
+        </div>
+        <div>
+            <form method="post" class="form" action="">
+                {% csrf_token %}
+                <div class="input-group mb-3">
+                    <textarea class="form-control" name="comment-input" placeholder="Add a comment here ..."></textarea>
+                    <div class="input-group-append">
+                        <button id="add-comment-button" class="btn btn-outline-secondary" type="submit">Add</button>
+                    </div>
+                </div>
+            </form>
+            {% if root_comment_ids %}
+                {% comments root_comment_ids 0 True user.id %}
+            {% endif %}
+        </div>
+    </div>
+
+    <script type="text/javascript">
+        $(document).ready(function() {
+            var post_state ="{{ state }}";
+            $('#marked-as-' + post_state).addClass('btn-primary');
+            $('#marked-as-' + post_state).removeClass('btn-outline-primary');
+        });
+    </script>
+
+{%  endblock %}

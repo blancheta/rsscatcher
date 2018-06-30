@@ -1,0 +1,15 @@
+{% extends "dashboard/dashboard.html" %}
+{% load bootstrap4 %}
+{% load static %}
+
+{% block title %}Feed{% endblock %}
+
+{% block header %}
+{%  endblock %}
+
+{% block dashboard-content %}
+
+    <h2>{{ feed.name }}</h2>
+    {% include "dashboard/post-list.html" %}
+
+{%  endblock %}

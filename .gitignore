@@ -1,0 +1,7 @@
+__pycache__
+src/db.sqlite3
+dump.rdb
+.idea/
+src/static
+src/celerybeat-schedule
+migrations/

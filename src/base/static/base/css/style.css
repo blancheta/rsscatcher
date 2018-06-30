@@ -1,0 +1,239 @@
+.landing-page-background{
+    background-image:url("../img/background.jpg");
+    background-repeat: no-repeat;
+    background-position: center;
+    height: 90%
+}
+
+html,body {
+  height: 100%;
+}
+
+body{
+    background-color: white;
+}
+
+.jumbotron{
+    background-color: rgba(233,236,239,0.7) !important;
+}
+
+.sidebar{
+    background-color: rgba(13,160,193,0.2);
+    margin: 0;
+    height: 100%;
+    padding-left: 0px;
+    padding-right: 0px;
+}
+
+.filter-count{
+    margin:0px;
+}
+
+#app-title{
+        text-align:center;
+        width:100%;
+        background-color:rgba(13,160,193,0.2);
+        padding: 6px;
+}
+
+.sidebar a,.sidebar .filter-count {
+    font-size: 0.8em;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+/* MY FEEDS PANEL */
+
+#feed-navbar{
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+.feed-name{
+    padding-left: 0px;
+    padding-right: 0px;
+}
+
+.action-col{
+    padding-right: 0px;
+}
+
+#filters{
+    padding-top: 20px;
+}
+
+.sidebar-panel-title{
+    font-size: 0.7em;
+}
+
+#create-feed, #log-out{
+    border-radius: 0px;
+    white-space: normal;
+}
+
+#log-out{
+    float: right;
+}
+
+/* DASHBOARD */
+
+.dashboard{
+    padding-left: 0px;
+    padding-right: 0px;
+    height: 100%;
+}
+
+.dashboard-navbar{
+    background-color: #EFEFEF;
+    padding: 0px;
+}
+
+.dashboard-content{
+    padding: 20px 50px 0px 20px;
+}
+
+.content{
+    background-color: white;
+}
+
+.feed{
+    border-bottom: 1px solid #D3D3D3;
+    margin-left: 0px;
+    margin-right: 0px;
+    padding-top:20px;
+    padding-bottom:20px;
+}
+
+.feeds{
+    font-size: 0.8em;
+}
+
+/* POSTS */
+
+#posts{
+    border: 1px solid #D3D3D3;
+    border-radius: 2px;
+    padding-left: 10px;
+    margin-top: 20px;
+
+}
+
+.post{
+    color: black;
+    font-size: 0.8em;
+}
+
+.post-content{
+   margin: 10px 0px
+}
+
+.post-title{
+    margin-top: 10px;
+    margin-bottom: 6px;
+}
+
+.post-summary{
+    margin-top: 14px;
+}
+
+.post:focus, .post:hover{
+    text-decoration: none;
+}
+
+#post-action-bar{
+    margin-left: 0px;
+    margin-right: 0px;
+    margin-bottom: 15px;
+}
+
+
+.pager{
+    font-size: 1.5em;
+    width: 50%;
+    text-align: center;
+}
+
+/* COMMENT */
+
+.comment{
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+.comment-content{
+    border-bottom: 1px solid #CECECE;
+    padding-top: 10px;
+    margin-top: 8px;
+    margin-bottom: 12px;
+}
+
+.comment-1{
+    padding-left: 70px;
+}
+
+.comment-2{
+    padding-left: 140px;
+}
+
+.comment-3{
+    padding-left: 210px;
+}
+
+@media (max-width: 767.98px) {
+
+    #app-title > h4{
+        font-size: 2.5em;
+    }
+
+    .dashboard {
+        height: auto;
+    }
+
+    .sidebar{
+        padding-bottom: 40px;
+    }
+
+    .sidebar-panel-title{
+        font-size: 1.6em;
+    }
+
+    .sidebar a,.sidebar .filter-count {
+        font-size: 1.1em;
+        font-weight: bold;
+        text-decoration: none;
+    }
+
+    .dashboard-content{
+        padding: 10px;
+        margin-top: 30px;
+    }
+
+    #posts{
+        margin-top: 30px;
+    }
+
+    .post{
+        font-size: 1.4em;
+    }
+
+    .pager{
+        font-size: 3em;
+        width: 50%;
+        text-align: center;
+    }
+
+    #log-out{
+        float: none;
+        width: 100%;
+    }
+
+    .keywords{
+        padding-left: 0px;
+        margin-bottom: 4px;
+    }
+
+    .action-col{
+        padding-left: 0px;
+    }
+
+}

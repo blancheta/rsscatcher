@@ -1,0 +1,58 @@
+<div id="filters">
+    <b class="sidebar-panel-title">FILTERS</b>
+    <div class="row">
+        <div class="col-2">
+            |||
+        </div>
+        <div class="col-8">
+            <a id="filter-today" href="{% url 'dashboard-filter' "today" %}">Today</a>
+        </div>
+        <div class="col-2">
+            <p class="filter-count" id="today-posts-count"></p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-2">
+            |||
+        </div>
+        <div class="col-8">
+            <a id="filter-readlater" href="{% url 'dashboard-filter' "readlater" %}">To Read Later</a>
+        </div>
+        <div class="col-2">
+            <p class="filter-count" id="readlater-posts-count"></p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-2">
+            |||
+        </div>
+        <div class="col-8">
+            <a id="filter-read" href="{% url 'dashboard-filter' "read" %}">Already Read</a>
+        </div>
+        <div class="col-2">
+            <p class="filter-count" id="read-posts-count"></p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-2">
+            |||
+        </div>
+        <div class="col-8">
+            <a id="filter-unread" href="{% url 'dashboard-filter' "unread" %}">Unread</a>
+        </div>
+        <div class="col-2">
+            <p class="filter-count" id="unread-posts-count"></p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-2">
+            |||
+        </div>
+        <div class="col-8">
+            <a id="filter-favorite" href="{% url 'dashboard-filter' "favorite" %}">Favorite</a>
+        </div>
+        <div class="col-2">
+            <p class="filter-count" id="favorite-posts-count"></p>
+        </div>
+    </div>
+</div>

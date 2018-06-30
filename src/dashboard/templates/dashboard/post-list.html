@@ -1,0 +1,23 @@
+{% load static %}
+<div id="posts">
+    {% for post in posts %}
+        <a class="row post" href="{% url 'dashboard-feed-post' post.feed.slug post.slug %}">
+
+            <div class="col-12">
+                <div class="post-title">
+                    <h4>{{ post.name }}</h4>
+                </div>
+                <div>
+                    {{ post.published_date }}
+                </div>
+                <div class="post-summary">
+                    {{ post.content|striptags|truncatechars:200 }}
+                </div>
+            </div>
+        </a>
+        <hr/>
+    {% empty %}
+        <span>No posts available</span>
+    {% endfor %}
+</div>
+{% include "dashboard/pagination.html" %}

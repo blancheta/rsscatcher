@@ -16,8 +16,8 @@ A Free RSS Reader
 sudo docker-compose build
 sudo docker-compose up -d
 
-# Run containers in a specific orders
-sudo docker start ps01 cl01 rd01 dg01 ng01
+# Restart containers in a specific orders
+sudo docker restart ps01 cl01 rd01 dg01 ng01
 
 ```
 

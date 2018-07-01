@@ -8,6 +8,8 @@ A Free RSS Reader
 
 [Docker install](https://docs.docker.com/compose/install/#master-builds)
 
+[Docker compose install](https://docs.docker.com/compose/install/)
+
 ### Run the project
 
 ```

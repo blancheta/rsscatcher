@@ -1,7 +1,7 @@
 {% if posts.has_other_pages %}
     <nav>
         <ul class="pagination">
-            {% if users.has_previous %}
+            {% if posts.has_previous %}
                 <li class="page-item pager"><a class="page-link" href="?page={{ posts.previous_page_number }}">&laquo;</a></li>
             {% else %}
                 <li class="disabled pager"><span class="page-link">&laquo;</span></li>

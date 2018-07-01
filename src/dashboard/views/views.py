@@ -1,16 +1,16 @@
+from datetime import date
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django_markup.markup import formatter
-from ..models import Feed, Post, UserPost, Comment
-from datetime import date
 from rsscatcher.settings import RESULTS_PER_PAGE
+from ..models import Feed, Post, UserPost, Comment
 
 
 def get_comment_root_ids(post):
 
     """
-        Get comments who have no parents for a specific post
+    Get comments who have no parents for a specific post
     """
 
     comments = Comment.objects.filter(parent__isnull=True)
@@ -34,7 +34,7 @@ def feed_posts(request, slug=None):
     current_feed = Feed.objects.get(subscription__user=request.user, slug=slug)
 
     return render(request, 'dashboard/feed.html', {
-        'posts': posts, 'feed': current_feed, 'posts': posts
+        'posts': posts, 'feed': current_feed
     })
 
 
@@ -45,7 +45,8 @@ def feed_post(request, slug_feed, slug_post=None):
         Return post for a specific feed
     """
 
-    post = Post.objects.get(slug=slug_post)
+    feed = Feed.objects.get(slug=slug_feed)
+    post = Post.objects.get(slug=slug_post, feed=feed)
 
     if request.POST and request.POST.get('comment-input'):
         content = request.POST.get('comment-input')
@@ -66,14 +67,15 @@ def post_change_state(request, slug_feed, slug_post=None, state=None):
     Update state for a user post
     """
 
-    current_post = Post.objects.get(slug=slug_post)
+    feed = Feed.objects.get(slug=slug_feed)
+    current_post = Post.objects.get(slug=slug_post, feed=feed)
 
     if state is not None:
         userpost = UserPost.objects.get(user=request.user, post=current_post)
         userpost.state = state
         userpost.save()
 
-    return render(request, 'dashboard/post.html',{
+    return render(request, 'dashboard/post.html', {
         'post': current_post, 'state': state,
         'root_comment_ids': get_comment_root_ids(current_post)
     })
@@ -82,8 +84,8 @@ def post_change_state(request, slug_feed, slug_post=None, state=None):
 def create_pagination(request, entries, entry_number=4):
 
     """
-        Create pagination for views
-        which return a list of element to display
+    Create pagination for views
+    which return a list of element to display
     """
 
     page = request.GET.get('page', 1)
@@ -100,13 +102,13 @@ def create_pagination(request, entries, entry_number=4):
 
 
 @login_required()
-def filter_view(request, filter=None):
+def filter_view(request, filter_state=None):
 
     """
     Display posts depending on a filter
     """
 
-    if filter == 'today':
+    if filter_state == 'today':
         today = date.today()
         posts = Post.objects.filter(
             feed__subscription__user=request.user,
@@ -117,18 +119,22 @@ def filter_view(request, filter=None):
             userpost__user=request.user
         )
     else:
-        posts = Post.objects.filter(userpost__user=request.user, userpost__state__exact=filter)
+        posts = Post.objects.filter(
+            userpost__user=request.user, userpost__state__exact=filter_state
+        )
 
     posts = create_pagination(request, posts, RESULTS_PER_PAGE)
 
-    return render(request, 'dashboard/filtered-posts.html', {'posts': posts, 'filter': filter})
+    return render(request, 'dashboard/filtered-posts.html', {
+        'posts': posts, 'filter': filter_state
+    })
 
 
 @login_required()
-def comments(request, comment_id, action="reply"):
+def comments_view(request, comment_id, action="reply"):
 
     """
-        Manage edit, reply actions for a comment
+    Manage edit, reply actions for a comment
     """
 
     comment = Comment.objects.get(id=comment_id)
@@ -144,6 +150,10 @@ def comments(request, comment_id, action="reply"):
 
         elif action == "reply" and request.POST.get('post-id') and content:
             post_id = request.POST.get('post-id')
-            Comment.objects.create(parent_id=comment_id, user=request.user, content=content, post_id=post_id)
+            Comment.objects.create(
+                parent_id=comment_id, user=request.user, content=content, post_id=post_id
+            )
 
     return render(request, 'dashboard/comment.html', {'comment': comment, 'action': action})
+
+

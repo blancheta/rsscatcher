@@ -1,10 +1,16 @@
+from datetime import date
 from django.http import JsonResponse
 from django.contrib.auth.decorators import login_required
 from ..models import Post, Feed
-from datetime import date
+
 
 @login_required()
 def sidebar(request):
+
+    """
+    Render data to display in the sidebar
+    """
+
     today = date.today()
 
     feeds = [

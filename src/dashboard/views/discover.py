@@ -15,7 +15,7 @@ def create_a_feed(url):
 
     if new_feed.feed.title:
 
-        feed = Feed.objects.create(
+        Feed.objects.create(
             name=new_feed.feed.title,
             slug=slugify(new_feed.feed.title),
             url=new_feed.url
@@ -24,6 +24,10 @@ def create_a_feed(url):
 
 @login_required()
 def discover(request):
+
+    """
+    Discover view to manage feed user subscriptions
+    """
 
     sources = Feed.objects.all()
 
@@ -35,17 +39,17 @@ def discover(request):
                 Q(name__iexact=search_term)
             )
 
-            if not len(sources):
+            if not sources:
                 sources = Feed.objects.filter(
                     keywords__name__iexact=search_term
                 )
 
-            if not len(sources):
+            if not sources:
                 sources = Feed.objects.filter(
                     url__exact=search_term
                 )
 
-                if not len(sources):
+                if not sources:
                     # Create the feed form search_term
                     create_a_feed(search_term)
 
@@ -74,6 +78,7 @@ def discover(request):
                     feed=feed_to_subscribe
                 ).delete()
 
-                UserPost.objects.filter(user=request.user, post__feed__exact=feed_to_subscribe).delete()
+                UserPost.objects.filter(
+                    user=request.user, post__feed__exact=feed_to_subscribe).delete()
 
     return render(request, 'dashboard/discover.html', {'sources': sources})

@@ -6,7 +6,7 @@ from dashboard.models import Feed, Post, Subscription, UserPost, Comment
 class FunctionalScenariosTest(FunctionalTest):
 
     def create_feeds(self):
-	
+
         """
           Create fake data for testing projects.
         """	
@@ -24,7 +24,7 @@ class FunctionalScenariosTest(FunctionalTest):
         feed2 = Feed.objects.create(
             name="Django news",
             slug="django-news",
-            url = "http://rss.marketingprofs.com/marketingprofs/metrics-roi"
+            url="http://rss.marketingprofs.com/marketingprofs/metrics-roi"
         )
         feed2.keywords.add(keyword1)
         feed2.keywords.add(keyword2)
@@ -50,14 +50,18 @@ class FunctionalScenariosTest(FunctionalTest):
                             publishing software zoals Aldus PageMaker die versies van Lorem Ipsum bevatten.""",
             feed=feed1,
             slug="python-2-7-countdown",
-            url = "http://www.upidev.fr"
+            url="http://www.upidev.fr"
         )
 
         self.username = "alex"
         self.password = "passpass"
 
-        self.user = User.objects.create_user(self.username, password=self.password, email='alexandreblanchet44@gmail.com')
-        self.user2 = User.objects.create_user('alex2', password='passpass', email='alexandreblanchet44@gmail.com')
+        self.user = User.objects.create_user(
+            self.username, password=self.password, email='alexandreblanchet44@gmail.com'
+        )
+        self.user2 = User.objects.create_user(
+            'alex2', password='passpass', email='alexandreblanchet44@gmail.com'
+        )
 
         Subscription.objects.create(user=self.user, feed=feed1)
 
@@ -246,7 +250,7 @@ class FunctionalScenariosTest(FunctionalTest):
         self.filter_read_posts()
         self.read_the_first_post()
 
-        # Alex likes this post
+        # Alex likes this post
         # He marks it as favourite
         self.mark_post_as_favorite()
 
@@ -254,8 +258,8 @@ class FunctionalScenariosTest(FunctionalTest):
         self.filter_favorite_posts()
         self.read_the_first_post()
 
-
     def test_read_an_unread_post_and_add_a_comment(self):
+
         # Alex registered to RSSCatcher and wants to read news for his favourite feed
         self.browser.get(self.server_url)
 
@@ -285,8 +289,8 @@ class FunctionalScenariosTest(FunctionalTest):
         # The user comment is added in the comment list
         self.assertEqual(len(comments) + 1, len(refreshed_comments))
 
-
     def test_read_a_day_post_for_existing_user(self):
+
         # Alex registered to RSSCatcher and wants to read news for his favourite feed
         self.browser.get(self.server_url)
 

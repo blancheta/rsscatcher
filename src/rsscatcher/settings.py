@@ -11,9 +11,8 @@ https://docs.djangoproject.com/en/2.0/ref/settings/
 """
 
 import os
-from datetime import timedelta
 import sys
-
+from django.urls import reverse_lazy
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -64,8 +63,7 @@ TEMPLATES = [
             os.path.join(BASE_DIR, 'base/templates'),
             os.path.join(BASE_DIR, 'accounts/templates'),
             os.path.join(BASE_DIR, 'dashboard/templates')
-        ]
-        ,
+        ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -121,9 +119,7 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-from django.urls import reverse_lazy
-
-LOGIN_REDIRECT_URL=reverse_lazy('dashboard')
+LOGIN_REDIRECT_URL = reverse_lazy('dashboard')
 
 # Internationalization
 # https://docs.djangoproject.com/en/2.0/topics/i18n/
@@ -151,5 +147,5 @@ STATIC_URL = '/static/'
 
 # Use SQLite engine if django test
 
-if 'test' in sys.argv or 'test_coverage' in sys.argv: #Covers regular testing and django-coverage
+if 'test' in sys.argv or 'test_coverage' in sys.argv:
     DATABASES['default']['ENGINE'] = 'django.db.backends.sqlite3'

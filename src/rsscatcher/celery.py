@@ -18,6 +18,11 @@ app.autodiscover_tasks()
 
 app.conf.timezone = 'UTC'
 
+
 @app.task(bind=True)
 def debug_task(self):
+
+    """
+        Debug method for celery
+    """
     print('Request: {0!r}'.format(self.request))

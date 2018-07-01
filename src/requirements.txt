@@ -12,3 +12,4 @@ pytz==2018.4
 redis==2.10.6
 selenium==3.12.0
 psycopg2==2.7.5
+pylint==1.9.2

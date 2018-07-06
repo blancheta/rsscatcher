@@ -10,9 +10,9 @@ import feedparser
 logger = get_task_logger(__name__)
 
 app.conf.beat_schedule = {
-    'synchronize-every-10-seconds': {
+    'synchronize-every-20-seconds': {
         'task': 'rsscatcher.tasks.synchronize_posts',
-        'schedule': 40.0,
+        'schedule': 20.0,
         'args': ()
     },
 }

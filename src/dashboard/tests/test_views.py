@@ -91,6 +91,8 @@ class DashboardViewTests(TestCase):
             username=self.users[0]['username'],
             password=self.users[0]['password'])
 
+        self.feed = init_feed()
+
     def test_redirect_to_discover_view_if_no_subscriptions_for_user(self):
         """
         If the user is connected and has not feeds
@@ -107,7 +109,7 @@ class DashboardViewTests(TestCase):
         """
 
         Subscription.objects.create(
-            feed=init_feed(), user=self.users[0]['user'])
+            feed=self.feed, user=self.users[0]['user'])
 
         response = self.client.post(reverse('dashboard'))
 

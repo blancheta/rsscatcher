@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 from feedparser import parse
-from base.helpers import slugify
+from django.utils.text import slugify
 from ..models import Feed, Subscription, Post, UserPost
 
 

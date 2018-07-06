@@ -3,9 +3,9 @@ from datetime import datetime
 from time import mktime
 import pytz
 from celery.utils.log import get_task_logger
-from feedparser import parse
-from base.helpers import slugify
+from django.utils.text import slugify
 from .celery import app
+import feedparser
 
 logger = get_task_logger(__name__)
 
@@ -33,7 +33,8 @@ def synchronize_posts():
 
     for feed in feeds:
 
-        online_feed = parse(feed.url)
+        online_feed = feedparser.parse(feed.url)
+
         entries = online_feed.entries
 
         for entry in entries:
@@ -46,7 +47,7 @@ def synchronize_posts():
 
             existing_post_count = Post.objects.filter(slug=slug, feed=feed).count()
 
-            if existing_post_count == 0:
+            if not existing_post_count:
 
                 post = Post.objects.create(
                     name=entry.title,

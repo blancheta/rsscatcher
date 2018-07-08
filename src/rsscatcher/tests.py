@@ -72,14 +72,16 @@ class SynchronizePostMethodTests(TestCase):
         self.user = User.objects.create_user("john", email="john@upidev.fr", password="toto")
         UserPost.objects.create(user=self.user,post=self.post)
 
-    @patch("feedparser.parse", get_fakeparser)
-    def test_entry_has_a_property_called_tags(self):
+    @patch("feedparser.parse")
+    def test_entry_has_a_property_called_tags(self, parse):
 
         """
         Parser should have a property called tags
         """
 
-        fakeparser_obj = self.get_fakeparser()
+        fakeparser_obj = parse("")
+
+        self.assertTrue(fakeparser_obj.entries)
         self.assertTrue(fakeparser_obj.entries[0].tags)
 
     @patch("feedparser.parse", get_fakeparser)

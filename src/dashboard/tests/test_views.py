@@ -2,6 +2,7 @@ from datetime import datetime, date
 from django.test import TestCase
 from django.shortcuts import reverse
 from django.core.exceptions import ObjectDoesNotExist
+from django.db.models.query import QuerySet
 from django.contrib.auth.models import User
 from django.core.paginator import Page
 import pytz
@@ -287,7 +288,8 @@ class FeedViewTests(TestCase):
 
         response = self.client.get('/dashboard/feed/python-planet/')
         self.assertTrue(response.context['feed'])
-        self.assertIsInstance(response.context['posts'], Page)
+        self.assertIsInstance(response.context['posts'], QuerySet)
+        self.assertIsInstance(response.context['page_obj'], Page)
 
     def test_can_display_a_post(self):
 
@@ -471,7 +473,8 @@ class FilterViewTests(TestCase):
             userpost = UserPost.objects.get(user=self.user, post=post)
             self.assertEqual(userpost.state, "unread")
 
-        self.assertIsInstance(response.context['posts'], Page)
+        self.assertIsInstance(response.context['posts'], QuerySet)
+        self.assertIsInstance(response.context['page_obj'], Page)
 
     def test_can_filter_read_posts(self):
 
@@ -492,7 +495,8 @@ class FilterViewTests(TestCase):
                 'read'
             )
 
-        self.assertIsInstance(response.context['posts'], Page)
+        self.assertIsInstance(response.context['posts'], QuerySet)
+        self.assertIsInstance(response.context['page_obj'], Page)
 
     def test_can_filter_unread_posts(self):
 
@@ -510,7 +514,8 @@ class FilterViewTests(TestCase):
                 'unread'
             )
 
-        self.assertIsInstance(response.context['posts'], Page)
+        self.assertIsInstance(response.context['posts'], QuerySet)
+        self.assertIsInstance(response.context['page_obj'], Page)
 
     def test_can_filter_favorite_posts(self):
 
@@ -531,7 +536,8 @@ class FilterViewTests(TestCase):
                 'favorite'
             )
 
-        self.assertIsInstance(response.context['posts'], Page)
+        self.assertIsInstance(response.context['posts'], QuerySet)
+        self.assertIsInstance(response.context['page_obj'], Page)
 
 
 class CommentViewTests(TestCase):

@@ -4,6 +4,8 @@ from django.db.models import Q
 from feedparser import parse
 from django.utils.text import slugify
 from ..models import Feed, Subscription, Post, UserPost
+from django.core.validators import URLValidator
+from django.core.exceptions import ValidationError
 
 
 def create_a_feed(url):
@@ -12,14 +14,14 @@ def create_a_feed(url):
     """
 
     new_feed = parse(url)
+    title = new_feed.feed.title
+    url = new_feed.url
 
-    if new_feed.feed.title:
-
-        Feed.objects.create(
-            name=new_feed.feed.title,
-            slug=slugify(new_feed.feed.title),
-            url=new_feed.url
-        )
+    Feed.objects.create(
+        name=title,
+        slug=slugify(title),
+        url=url
+    )
 
 
 @login_required()
@@ -29,33 +31,34 @@ def discover(request):
     Discover view to manage feed user subscriptions
     """
 
-    sources = Feed.objects.all()
+    sources = []
 
     if request.POST:
         if request.POST.get('search-input', False):
             search_term = request.POST['search-input']
 
+            # Check if a source exist for this term
             sources = Feed.objects.filter(
-                Q(name__iexact=search_term)
-            )
+                Q(name__iexact=search_term) |
+                Q(url=search_term) |
+                Q(keywords__name=search_term)
+            ).distinct()
 
             if not sources:
-                sources = Feed.objects.filter(
-                    keywords__name__iexact=search_term
-                )
+                val = URLValidator()
+                try:
+                    val(search_term)
 
-            if not sources:
-                sources = Feed.objects.filter(
-                    url__exact=search_term
-                )
-
-                if not sources:
-                    # Create the feed form search_term
+                    # New feed from the valid URL
                     create_a_feed(search_term)
 
+                    # Filter on this new feed
                     sources = Feed.objects.filter(
-                        url__exact=search_term
+                        url__iexact=search_term
                     )
+
+                except ValidationError:
+                   print("search_term is not a valid URL")
 
         if request.POST.get('feed-to-follow', False):
             feed_to_subscribe = Feed.objects.get(id=request.POST['feed-to-follow'])
@@ -80,5 +83,8 @@ def discover(request):
 
                 UserPost.objects.filter(
                     user=request.user, post__feed__exact=feed_to_subscribe).delete()
+
+    if not sources:
+        sources = Feed.objects.all()
 
     return render(request, 'dashboard/discover.html', {'sources': sources})

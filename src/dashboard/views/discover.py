@@ -3,9 +3,11 @@ from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 from feedparser import parse
 from django.utils.text import slugify
-from ..models import Feed, Subscription, Post, UserPost
 from django.core.validators import URLValidator
 from django.core.exceptions import ValidationError
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.views.generic.list import ListView
+from ..models import Feed, Subscription, Post, UserPost
 
 
 def create_a_feed(url):
@@ -24,16 +26,26 @@ def create_a_feed(url):
     )
 
 
-@login_required()
-def discover(request):
+class DiscoverView(LoginRequiredMixin, ListView):
 
     """
     Discover view to manage feed user subscriptions
     """
 
-    sources = []
+    model = Feed
+    queryset = Feed.objects.all()
+    context_object_name = 'sources'
+    template_name = 'dashboard/discover.html'
 
-    if request.POST:
+    def post(self, request):
+
+        """
+        Filter sources and
+        create new feed if not existing yet
+        """
+
+        sources = []
+
         if request.POST.get('search-input', False):
             search_term = request.POST['search-input']
 
@@ -58,7 +70,7 @@ def discover(request):
                     )
 
                 except ValidationError:
-                   print("search_term is not a valid URL")
+                    print("search_term is not a valid URL")
 
         if request.POST.get('feed-to-follow', False):
             feed_to_subscribe = Feed.objects.get(id=request.POST['feed-to-follow'])
@@ -84,7 +96,4 @@ def discover(request):
                 UserPost.objects.filter(
                     user=request.user, post__feed__exact=feed_to_subscribe).delete()
 
-    if not sources:
-        sources = Feed.objects.all()
-
-    return render(request, 'dashboard/discover.html', {'sources': sources})
+        return render(request, 'dashboard/discover.html', {'sources': sources})

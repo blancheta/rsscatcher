@@ -1,4 +1,4 @@
-from .discover import discover
+from .discover import DiscoverView
 from .dashboard import dashboard
 from .sidebar import sidebar
 from .views import (

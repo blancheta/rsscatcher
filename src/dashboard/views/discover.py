@@ -1,5 +1,4 @@
 from django.shortcuts import render
-from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 from feedparser import parse
 from django.utils.text import slugify

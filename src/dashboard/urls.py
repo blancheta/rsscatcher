@@ -1,13 +1,13 @@
 from django.urls import path
 from .views import (
-    dashboard, FilterPosts, discover, FeedPosts,
-    feed_post, post_change_state, sidebar, comments_view
+    dashboard, FilterPosts, FeedPosts,
+    feed_post, post_change_state, sidebar, comments_view, DiscoverView
 )
 
 urlpatterns = [
     path('', dashboard, name="dashboard"),
     path('filter/<filter_state>', FilterPosts.as_view(), name="dashboard-filter"),
-    path('discover/', discover, name="dashboard-discover"),
+    path('discover/', DiscoverView.as_view(), name="dashboard-discover"),
     path('sidebar/', sidebar, name="dashboard-sidebar"),
     path('comments/<comment_id>/<action>', comments_view, name="dashboard-comments"),
     path('feed/<slug>/', FeedPosts.as_view(), name='dashboard-feed-posts'),

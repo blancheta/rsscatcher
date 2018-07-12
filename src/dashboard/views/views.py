@@ -4,6 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django_markup.markup import formatter
 from django.views.generic.list import ListView
+from django.views.generic.base import View
 
 from rsscatcher.settings import RESULTS_PER_PAGE
 from ..models import Feed, Post, UserPost, Comment
@@ -24,15 +25,15 @@ def get_comment_root_ids(post):
 
 class FeedPosts(LoginRequiredMixin, ListView):
 
+    """
+    Return posts for a specific feed
+    """
+
     context_object_name = 'posts'
     paginate_by = RESULTS_PER_PAGE
     template_name = 'dashboard/feed.html'
 
     def get_context_data(self, *, object_list=None, **kwargs):
-
-        """
-        Return posts for a specific feed
-        """
 
         context = super().get_context_data(**kwargs)
 
@@ -47,47 +48,68 @@ class FeedPosts(LoginRequiredMixin, ListView):
         return Post.objects.filter(feed__slug=self.kwargs['slug'])
 
 
-@login_required()
-def feed_post(request, slug_feed, slug_post=None):
+class FeedPost(LoginRequiredMixin, View):
 
     """
     Return post for a specific feed
     """
 
-    feed = Feed.objects.get(slug=slug_feed)
-    post = Post.objects.get(slug=slug_post, feed=feed)
+    def get(self, request, slug_feed, slug_post=None):
 
-    if request.POST and request.POST.get('comment-input'):
-        content = request.POST.get('comment-input')
-        content = formatter(content, filter_name='markdown')
-        Comment.objects.create(user=request.user, content=content, post=post)
+        feed = Feed.objects.get(slug=slug_feed)
+        post = Post.objects.get(slug=slug_post, feed=feed)
 
-    return render(request, 'dashboard/post.html', {
-        'post': post,
-        'state': post.userpost_set.get(user=request.user).state,
-        'root_comment_ids': get_comment_root_ids(post)
-    })
+        return render(request, 'dashboard/post.html', {
+            'post': post,
+            'state': post.userpost_set.get(user=request.user).state,
+            'root_comment_ids': get_comment_root_ids(post)
+        })
 
 
-@login_required()
-def post_change_state(request, slug_feed, slug_post=None, state=None):
+class FeedPostNewComment(LoginRequiredMixin, View):
+
+    """
+    New comment
+    """
+
+    def post(self, request, slug_feed, slug_post=None):
+
+        feed = Feed.objects.get(slug=slug_feed)
+        post = Post.objects.get(slug=slug_post, feed=feed)
+
+        if request.POST.get('comment-input'):
+            content = request.POST.get('comment-input')
+            content = formatter(content, filter_name='markdown')
+            Comment.objects.create(user=request.user, content=content, post=post)
+
+        return render(request, 'dashboard/post.html', {
+            'post': post,
+            'state': post.userpost_set.get(user=request.user).state,
+            'root_comment_ids': get_comment_root_ids(post)
+        })
+
+
+class PostChangeState(LoginRequiredMixin, View):
 
     """
     Update state for a user post
     """
 
-    feed = Feed.objects.get(slug=slug_feed)
-    current_post = Post.objects.get(slug=slug_post, feed=feed)
+    def get(self, request, slug_feed=None, slug_post=None, state=None):
 
-    if state is not None:
-        userpost = UserPost.objects.get(user=request.user, post=current_post)
-        userpost.state = state
-        userpost.save()
 
-    return render(request, 'dashboard/post.html', {
-        'post': current_post, 'state': state,
-        'root_comment_ids': get_comment_root_ids(current_post)
-    })
+        feed = Feed.objects.get(slug=slug_feed)
+        current_post = Post.objects.get(slug=slug_post, feed=feed)
+
+        if state is not None:
+            userpost = UserPost.objects.get(user=request.user, post=current_post)
+            userpost.state = state
+            userpost.save()
+
+        return render(request, 'dashboard/post.html', {
+            'post': current_post, 'state': state,
+            'root_comment_ids': get_comment_root_ids(current_post)
+        })
 
 
 class FilterPosts(LoginRequiredMixin, ListView):
@@ -118,29 +140,29 @@ class FilterPosts(LoginRequiredMixin, ListView):
         return posts
 
 
-@login_required()
-def comments_view(request, comment_id, action="reply"):
+class CommentView(LoginRequiredMixin, View):
 
     """
     Manage edit, reply actions for a comment
     """
 
-    comment = Comment.objects.get(id=comment_id)
+    def post(self, request, comment_id, action="reply"):
 
-    if request.POST and request.POST.get('comment-input'):
+        comment = Comment.objects.get(id=comment_id)
 
-        content = request.POST.get('comment-input')
-        content = formatter(content, filter_name='markdown')
+        if request.POST.get('comment-input'):
 
-        if action == "edit" and content:
-            comment.content = content
-            comment.save()
+            content = request.POST.get('comment-input')
+            content = formatter(content, filter_name='markdown')
 
-        elif action == "reply" and request.POST.get('post-id') and content:
-            post_id = request.POST.get('post-id')
-            Comment.objects.create(
-                parent_id=comment_id, user=request.user, content=content, post_id=post_id
-            )
+            if action == "edit" and content:
+                comment.content = content
+                comment.save()
 
-    return render(request, 'dashboard/comment.html', {'comment': comment, 'action': action})
+            elif action == "reply" and request.POST.get('post-id') and content:
+                post_id = request.POST.get('post-id')
+                Comment.objects.create(
+                    parent_id=comment_id, user=request.user, content=content, post_id=post_id
+                )
 
+        return render(request, 'dashboard/comment.html', {'comment': comment, 'action': action})

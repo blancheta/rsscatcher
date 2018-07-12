@@ -423,7 +423,7 @@ class PostViewTests(TestCase):
         comment_count_expected = comment_count + 1
 
         response = self.client.post(
-            '/dashboard/feed/python-planet/posts/python-2-7-countdown',
+            '/dashboard/comment/python-planet/python-2-7-countdown/create',
             {'comment-input': "Awesome dude"}
         )
 
